@@ -321,7 +321,7 @@ module Git
     end
 
     def config_get(name)
-      do_get = lambda do
+      do_get = lambda do |path|
         command('config', ['--get', name])
       end
 
@@ -362,7 +362,6 @@ module Git
     end
 
     def parse_config(file)
-      hsh = {}
       parse_config_list command_lines('config', ['--list', '--file', file], false)
       #hsh = {}
       #file = File.expand_path(file)
@@ -718,8 +717,8 @@ module Git
     end
 
     def escape(s)
-      escaped = s.to_s.gsub('\'', '\'\\\'\'')
-      %Q{"#{escaped}"}
+      escaped = s.to_s.gsub("'", "\\'")
+      "'" + escaped + "'"
     end
 
   end

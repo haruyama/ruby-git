@@ -16,26 +16,23 @@ begin
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
-
-  Jeweler::RubyforgeTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-
-desc "Upload Docs"
-task :upload_docs do |t|
- system('rsync -rv --delete doc/ git.rubyforge.org:/var/www/gforge-projects/git')
-end
+# desc "Upload Docs"
+# task :upload_docs do |t|
+#  system('rsync -rv --delete doc/ git.rubyforge.org:/var/www/gforge-projects/git')
+# end
 
 desc "Run Unit Tests"
-task :test do |t|
+task :test do
     $VERBOSE = true
-    require File.dirname(__FILE__) + '/tests/all_tests.rb'
+    exec 'ruby', File.dirname(__FILE__) + '/tests/all_tests.rb'
 end
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   if File.exist?('VERSION.yml')
     config = YAML.load(File.read('VERSION.yml'))
     version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
