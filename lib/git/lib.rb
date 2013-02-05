@@ -172,6 +172,7 @@ module Git
 
       command_lines('ls-tree', sha).each do |line|
         (info, filenm) = line.split("\t")
+        filenm = trim_filename(filenm)
         (mode, type, sha) = info.split
         data[type][filenm] = {:mode => mode, :sha => sha}
       end
@@ -721,5 +722,14 @@ module Git
       "'" + escaped + "'"
     end
 
+    def trim_filename(name)
+      if name[0] == '"' && name[-1] = '"'
+        name[1..-2].gsub(/\\(\d{3})/){
+          $1.oct.chr
+        }.gsub('\\"', '"')
+      else
+        name
+      end
+    end
   end
 end
