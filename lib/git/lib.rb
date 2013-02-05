@@ -724,9 +724,10 @@ module Git
 
     def trim_filename(name)
       if name[0] == '"' && name[-1] = '"'
+        encoding = name.encoding
         name[1..-2].gsub(/\\(\d{3})/){
           $1.oct.chr
-        }.gsub('\\"', '"')
+        }.gsub('\\"', '"').force_encoding(encoding)
       else
         name
       end
