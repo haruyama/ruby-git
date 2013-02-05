@@ -1,4 +1,5 @@
 require 'tempfile'
+require 'shellwords'
 
 module Git
 
@@ -517,10 +518,10 @@ module Git
     def conflicts # :yields: file, your, their
       self.unmerged.each do |f|
         your = Tempfile.new("YOUR-#{File.basename(f)}").path
-        command('show', ":2:#{f}", true, "> #{escape your}")
+        command('show', ":2:#{f}", true, "> #{your.shellescape}")
 
         their = Tempfile.new("THEIR-#{File.basename(f)}").path
-        command('show', ":3:#{f}", true, "> #{escape their}")
+        command('show', ":3:#{f}", true, "> #{their.shellescape}")
         yield(f, your, their)
       end
     end
@@ -600,7 +601,7 @@ module Git
       arr_opts << tree
       arr_opts << '-p' << opts[:parent] if opts[:parent]
       arr_opts += [opts[:parents]].map { |p| ['-p', p] }.flatten if opts[:parents]
-      command('commit-tree', arr_opts, true, "< #{escape t.path}")
+      command('commit-tree', arr_opts, true, "< #{t.path.shellescape}")
     end
 
     def update_ref(branch, commit)
@@ -640,7 +641,7 @@ module Git
       arr_opts << "--remote=#{opts[:remote]}" if opts[:remote]
       arr_opts << sha
       arr_opts << '--' << opts[:path] if opts[:path]
-      command('archive', arr_opts, true, (opts[:add_gzip] ? '| gzip' : '') + " > #{escape file}")
+      command('archive', arr_opts, true, (opts[:add_gzip] ? '| gzip' : '') + " > #{file.shellescape}")
       return file
     end
 
@@ -685,7 +686,7 @@ module Git
       ENV['GIT_WORK_TREE'] = @git_work_dir
       path = @git_work_dir || @git_dir || @path
 
-      opts = [opts].flatten.map {|s| escape(s) }.join(' ')
+      opts = [opts].flatten.map {|s| s ? s.to_s.shellescape : '' }.join(' ')
       git_cmd = "git #{cmd} #{opts} #{redirect} 2>&1"
 
       out = nil
@@ -715,11 +716,6 @@ module Git
       else
         `#{git_cmd}`.chomp
       end
-    end
-
-    def escape(s)
-      escaped = s.to_s.gsub("'", "\\'")
-      "'" + escaped + "'"
     end
 
     def trim_filename(name)
