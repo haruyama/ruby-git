@@ -1,3 +1,9 @@
+== 1.2.6 (haruyama)
+
+* use shellwords library
+
+...
+
 == 1.0.4
 
 * added camping/gitweb.rb frontend
