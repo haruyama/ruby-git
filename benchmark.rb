@@ -7,15 +7,15 @@ require 'lib/git'
 
 def main
   @wbare = File.expand_path(File.join('tests', 'files', 'working.git'))
-  
+
   in_temp_dir do
     g = Git.clone(@wbare, 'test')
     g.chdir do
-      
+
       n = 40
       result = RubyProf.profile do
-      puts "<pre>"
-      
+      puts '<pre>'
+
       Benchmark.bm(8) do |x|
         run_code(x, 'objects') do
           @commit = g.gcommit('1cc8667014381')
@@ -23,8 +23,8 @@ def main
           @blob = g.gblob('v2.5:example.txt')
           @obj = g.object('v2.5:example.txt')
         end
-        
-                
+
+
         x.report('config  ') do
           n.times do
             c = g.config
@@ -32,7 +32,7 @@ def main
             c = g.config('user.email', 'schacon@gmail.com')
           end
         end
-        
+
         x.report('diff    ') do
           n.times do
             g.diff('gitsearch1', 'v2.5').lines
@@ -40,7 +40,7 @@ def main
             g.diff('gitsearch1', 'v2.5').patch
           end
         end
-        
+
         x.report('path    ') do
           n.times do
             g.dir.readable?
@@ -48,7 +48,7 @@ def main
             g.repo.readable?
           end
         end
-        
+
         #------------------
         x.report('status  ') do
           n.times do
@@ -67,13 +67,13 @@ def main
             log.size
             log.first
             g.log.between('v2.5').object('example.txt').map { |c| c.message }
-            g.log.since("2 years ago").map { |c| c.message }
+            g.log.since('2 years ago').map { |c| c.message }
           end
         end
 
         #------------------
         x.report('branch  ') do
-          for i in 1..10 do
+          (1..10).each { |i|
             g.checkout('master')
             g.branch('new_branch' + i.to_s).in_branch('test') do
               g.current_branch
@@ -83,39 +83,39 @@ def main
             end
             g.branch('new_branch').merge('new_branch' + i.to_s)
             g.checkout('new_branch')
-          end
+          }
         end
-        
+
         #------------------
         x.report('tree    ') do
-          for i in 1..10 do
-            tr = g.with_temp_index do
+          (1..10).each { |i|
+            g.with_temp_index do
                g.read_tree('new_branch' + i.to_s)
-               index = g.ls_files
+               g.ls_files
                g.write_tree
              end
-          end
-        end rescue nil
+          }
+        end
 
         x.report('archive ') do
           n.times do
-            f = g.gcommit('v2.6').archive # returns path to temp file
+            g.gcommit('v2.6').archive # returns path to temp file
           end
-        end rescue nil
-   
-	     
+        end
+
+
       end
-    
+
       end
 
       # Print a graph profile to text
-      puts "</pre>"
+      puts '</pre>'
       printer = RubyProf::GraphHtmlPrinter.new(result)
       printer.print(STDOUT, 1)
       printer = RubyProf::FlatPrinter.new(result)
-      puts "<pre>"
+      puts '<pre>'
       printer.print(STDOUT, 1)
-      puts "</pre>"
+      puts '</pre>'
     end
   end
 end
@@ -125,13 +125,13 @@ def run_code(x, name, times = 30)
   #result = RubyProf.profile do
 
     x.report(name) do
-      for i in 1..times do
+      (1..times).each { |i|
         yield i
-      end
+      }
     end
-  
+
   #end
-  
+
   # Print a graph profile to text
   #printer = RubyProf::FlatPrinter.new(result)
   #printer.print(STDOUT, 0)
@@ -146,7 +146,7 @@ end
 
 def in_temp_dir(remove_after = true)
   filename = 'git_test' + Time.now.to_i.to_s + rand(300).to_s.rjust(3, '0')
-  tmp_path = File.join("/tmp/", filename)
+  tmp_path = File.join('/tmp/', filename)
   FileUtils.mkdir(tmp_path)
   Dir.chdir tmp_path do
     yield tmp_path

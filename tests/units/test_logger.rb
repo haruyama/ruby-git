@@ -15,7 +15,7 @@ class TestLogger < Test::Unit::TestCase
     logger = Logger.new(log.path)
     logger.level = Logger::DEBUG
 
-    @git = Git.open(@wdir, :log => logger)
+    @git = Git.open(@wdir, log: logger)
     @git.branches.size
 
     logc = File.read(log.path)
@@ -27,7 +27,7 @@ class TestLogger < Test::Unit::TestCase
     logger = Logger.new(log.path)
     logger.level = Logger::INFO
 
-    @git = Git.open(@wdir, :log => logger)
+    @git = Git.open(@wdir, log: logger)
     @git.branches.size
 
     logc = File.read(log.path)

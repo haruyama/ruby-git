@@ -33,22 +33,22 @@ class TestLog < Test::Unit::TestCase
   end
 
   def test_get_log_since
-    l = @git.log.since("2 seconds ago")
+    l = @git.log.since('2 seconds ago')
     assert_equal(0, l.size)
 
-    l = @git.log.since("10 years ago")
+    l = @git.log.since('10 years ago')
     assert_equal(30, l.size)
   end
 
   def test_get_log_grep
-    l = @git.log.grep("search")
+    l = @git.log.grep('search')
     assert_equal(2, l.size)
   end
 
   def test_get_log_author
-    l = @git.log(5).author("chacon")
+    l = @git.log(5).author('chacon')
     assert_equal(5, l.size)
-    l = @git.log(5).author("lazySusan")
+    l = @git.log(5).author('lazySusan')
     assert_equal(0, l.size)
   end
 

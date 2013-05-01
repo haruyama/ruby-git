@@ -19,7 +19,7 @@ class TestLib < Test::Unit::TestCase
     assert_equal('scott Chacon <schacon@agadorsparticus.corp.reactrix.com> 1194561188 -0800', data['author'])
     assert_equal('94c827875e2cadb8bc8d4cdd900f19aa9e8634c7', data['tree'])
     assert_equal("test\n", data['message'])
-    assert_equal(["546bec6f8872efa41d5d97a369f669165ecda0de"], data['parent'])
+    assert_equal(['546bec6f8872efa41d5d97a369f669165ecda0de'], data['parent'])
   end
 
   # takes parameters, returns array of appropriate commit objects
@@ -28,24 +28,24 @@ class TestLib < Test::Unit::TestCase
   # :between
   # :object
   def test_log_commits
-    a = @lib.log_commits :count => 10
+    a = @lib.log_commits count: 10
     assert(a.first.is_a?(String))
     assert_equal(10, a.size)
 
-    a = @lib.log_commits :count => 20, :since => '10 years ago'
+    a = @lib.log_commits count: 20, since: '10 years ago'
     assert(a.first.is_a?(String))
     assert_equal(20, a.size)
 
-    a = @lib.log_commits :count => 20, :since => '1 second ago'
+    a = @lib.log_commits count: 20, since: '1 second ago'
     assert_equal(0, a.size)
 
-    a = @lib.log_commits :count => 20, :between => ['v2.5', 'v2.6']
+    a = @lib.log_commits count: 20, between: ['v2.5', 'v2.6']
     assert_equal(2, a.size)
 
-    a = @lib.log_commits :count => 20, :path_limiter => 'ex_dir/'
+    a = @lib.log_commits count: 20, path_limiter: 'ex_dir/'
     assert_equal(1, a.size)
 
-    a = @lib.full_log_commits :count => 20
+    a = @lib.full_log_commits count: 20
     assert_equal(20, a.size)
   end
 
@@ -132,8 +132,8 @@ class TestLib < Test::Unit::TestCase
 
   def test_ls_tree
     tree = @lib.ls_tree('94c827875e2cadb8bc8d4cdd900f19aa9e8634c7')
-    assert_equal("3aac4b445017a8fc07502670ec2dbf744213dd48", tree['blob']['example.txt'][:sha])
-    assert_equal("100644", tree['blob']['example.txt'][:mode])
+    assert_equal('3aac4b445017a8fc07502670ec2dbf744213dd48', tree['blob']['example.txt'][:sha])
+    assert_equal('100644', tree['blob']['example.txt'][:mode])
     assert(tree['tree'])
   end
 
@@ -144,23 +144,23 @@ class TestLib < Test::Unit::TestCase
   #  :ignore_case (bool)
   #  :invert_match (bool)
   def test_grep
-    match = @lib.grep('search', :object => 'gitsearch1')
+    match = @lib.grep('search', object: 'gitsearch1')
     assert_equal('to search one', match['gitsearch1:scott/text.txt'].assoc(6)[1])
     assert_equal(2, match['gitsearch1:scott/text.txt'].size)
     assert_equal(2, match.size)
 
-    match = @lib.grep('search', :object => 'gitsearch1', :path_limiter => 'scott/new*')
-    assert_equal("you can't search me!", match["gitsearch1:scott/newfile"].first[1])
+    match = @lib.grep('search', object: 'gitsearch1', path_limiter: 'scott/new*')
+    assert_equal("you can't search me!", match['gitsearch1:scott/newfile'].first[1])
     assert_equal(1, match.size)
 
-    match = @lib.grep('SEARCH', :object => 'gitsearch1')
+    match = @lib.grep('SEARCH', object: 'gitsearch1')
     assert_equal(0, match.size)
 
-    match = @lib.grep('SEARCH', :object => 'gitsearch1', :ignore_case => true)
-    assert_equal("you can't search me!", match["gitsearch1:scott/newfile"].first[1])
+    match = @lib.grep('SEARCH', object: 'gitsearch1', ignore_case: true)
+    assert_equal("you can't search me!", match['gitsearch1:scott/newfile'].first[1])
     assert_equal(2, match.size)
 
-    match = @lib.grep('search', :object => 'gitsearch1', :invert_match => true)
+    match = @lib.grep('search', object: 'gitsearch1', invert_match: true)
     assert_equal(6, match['gitsearch1:scott/text.txt'].size)
     assert_equal(2, match.size)
   end

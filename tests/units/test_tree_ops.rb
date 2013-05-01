@@ -36,8 +36,8 @@ class TestTreeOps < Test::Unit::TestCase
         # test some read-trees
         tr = g.with_temp_index do
           g.read_tree('testbranch1')
-          g.read_tree('testbranch2', :prefix => 'b2/')
-          g.read_tree('testbranch3', :prefix => 'b2/b3/')
+          g.read_tree('testbranch2', prefix: 'b2/')
+          g.read_tree('testbranch3', prefix: 'b2/b3/')
           index = g.ls_files
           assert(index['b2/test-file2'])
           assert(index['b2/b3/test-file3'])
@@ -49,8 +49,8 @@ class TestTreeOps < Test::Unit::TestCase
         # only prefixed read-trees
         tr = g.with_temp_index do
           g.add  # add whats in our working tree
-          g.read_tree('testbranch1', :prefix => 'b1/')
-          g.read_tree('testbranch3', :prefix => 'b2/b3/')
+          g.read_tree('testbranch1', prefix: 'b1/')
+          g.read_tree('testbranch3', prefix: 'b2/b3/')
           index = g.ls_files
           assert(index['example.txt'])
           assert(index['b1/test-file1'])
@@ -68,8 +68,8 @@ class TestTreeOps < Test::Unit::TestCase
 #             assert_raises Git::GitExecuteError do
             g.add  # add whats in our working tree - should be nothing
 #             end
-            g.read_tree('testbranch1', :prefix => 'b1/')
-            g.read_tree('testbranch3', :prefix => 'b1/b3/')
+            g.read_tree('testbranch1', prefix: 'b1/')
+            g.read_tree('testbranch3', prefix: 'b1/b3/')
             index = g.ls_files
             assert(!index['example.txt'])
             assert(index['b1/test-file1'])
@@ -80,7 +80,7 @@ class TestTreeOps < Test::Unit::TestCase
           assert_equal('b40f7a9072cdec637725700668f8fdebe39e6d38', tr)
         end
 
-        c = g.commit_tree(tr, :parents => 'HEAD')
+        c = g.commit_tree(tr, parents: 'HEAD')
         assert(c.commit?)
         assert_equal('b40f7a9072cdec637725700668f8fdebe39e6d38', c.gtree.sha)
 
@@ -88,8 +88,8 @@ class TestTreeOps < Test::Unit::TestCase
         tmppath = tmp.path
         tmp.unlink
         g.with_index(tmppath) do
-          g.read_tree('testbranch1', :prefix => 'b1/')
-          g.read_tree('testbranch3', :prefix => 'b3/')
+          g.read_tree('testbranch1', prefix: 'b1/')
+          g.read_tree('testbranch3', prefix: 'b3/')
           index = g.ls_files
           assert(!index['b2/test-file2'])
           assert(index['b3/test-file3'])
@@ -110,7 +110,7 @@ class TestTreeOps < Test::Unit::TestCase
           assert(!File.directory?('b1'))
           g.checkout_index
           assert(!File.directory?('b1'))
-          g.checkout_index(:all => true)
+          g.checkout_index(all: true)
           assert(File.directory?('b1'))
         end
 

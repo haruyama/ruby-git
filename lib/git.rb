@@ -1,8 +1,8 @@
-
+require 'English'
 # Add the directory containing this file to the start of the load path if it
 # isn't there already.
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+$LOAD_PATH.unshift(File.dirname(__FILE__)) unless
+  $LOAD_PATH.include?(File.dirname(__FILE__)) || $LOAD_PATH.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'git/base'
 require 'git/path'
@@ -68,8 +68,8 @@ module Git
   # your git_dir and index are in the default place (.git/, .git/index)
   #
   # options
-  #   :repository => '/path/to/alt_git_dir'
-  #   :index => '/path/to/alt_index_file'
+  #   repository: '/path/to/alt_git_dir'
+  #   index: '/path/to/alt_index_file'
   def self.open(working_dir, options = {})
     Base.open(working_dir, options)
   end
@@ -77,8 +77,8 @@ module Git
   # initialize a new git repository, defaults to the current working directory
   #
   # options
-  #   :repository => '/path/to/alt_git_dir'
-  #   :index => '/path/to/alt_index_file'
+  #   repository: '/path/to/alt_git_dir'
+  #   index: '/path/to/alt_index_file'
   def self.init(working_dir = '.', options = {})
     Base.init(working_dir, options)
   end
@@ -86,12 +86,12 @@ module Git
   # clones a remote repository
   #
   # options
-  #   :bare => true (does a bare clone)
-  #   :repository => '/path/to/alt_git_dir'
-  #   :index => '/path/to/alt_index_file'
+  #   bare: true (does a bare clone)
+  #   repository: '/path/to/alt_git_dir'
+  #   index: '/path/to/alt_index_file'
   #
   # example
-  #  Git.clone('git://repo.or.cz/rubygit.git', 'clone.git', :bare => true)
+  #  Git.clone('git://repo.or.cz/rubygit.git', 'clone.git', bare: true)
   #
   def self.clone(repository, name, options = {})
     Base.clone(repository, name, options)
@@ -106,7 +106,7 @@ module Git
   # remote, 'origin.'
   def self.export(repository, name, options = {})
     options.delete(:remote)
-    repo = clone(repository, name, {:depth => 1}.merge(options))
+    repo = clone(repository, name, {depth: 1}.merge(options))
     repo.checkout("origin/#{options[:branch]}") if options[:branch]
     Dir.chdir(repo.dir.to_s) { FileUtils.rm_r '.git' }
   end
@@ -117,10 +117,10 @@ module Git
   #g.config # returns whole config hash
   def config(name = nil, value = nil)
     lib = Git::Lib.new
-    if(name && value)
+    if name && value
       # set value
       lib.config_set(name, value)
-    elsif (name)
+    elsif name
       # return value
       lib.config_get(name)
     else
@@ -137,10 +137,10 @@ module Git
   #g.config # returns whole config hash
   def self.global_config(name = nil, value = nil)
     lib = Git::Lib.new(nil, nil)
-    if(name && value)
+    if name && value
       # set value
       lib.global_config_set(name, value)
-    elsif (name)
+    elsif name
       # return value
       lib.global_config_get(name)
     else

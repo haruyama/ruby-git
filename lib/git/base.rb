@@ -4,13 +4,13 @@ module Git
 
     # opens a bare Git Repository - no working directory options
     def self.bare(git_dir, opts = {})
-      self.new({:repository => git_dir}.merge(opts))
+      self.new({repository: git_dir}.merge(opts))
     end
 
     # opens a new Git Project from a working directory
     # you can specify non-standard git_dir and index file in the options
     def self.open(working_dir, opts={})
-      self.new({:working_directory => working_dir}.merge(opts))
+      self.new({working_directory: working_dir}.merge(opts))
     end
 
     # initializes a git repository
@@ -21,8 +21,8 @@ module Git
     #
     def self.init(working_dir, opts = {})
       opts = {
-        :working_directory => working_dir,
-        :repository => File.join(working_dir, '.git')
+        working_directory: working_dir,
+        repository: File.join(working_dir, '.git')
       }.merge(opts)
 
       FileUtils.mkdir_p(opts[:working_directory]) if opts[:working_directory] && !File.directory?(opts[:working_directory])
@@ -58,7 +58,7 @@ module Git
       end
       if options[:log]
         @logger = options[:log]
-        @logger.info("Starting Git")
+        @logger.info('Starting Git')
       else
         @logger = nil
       end
@@ -127,10 +127,10 @@ module Git
     #g.config('user.name')  # returns 'Scott Chacon'
     #g.config # returns whole config hash
     def config(name = nil, value = nil)
-      if(name && value)
+      if name && value
         # set value
         lib.config_set(name, value)
-      elsif (name)
+      elsif name
         # return value
         lib.config_get(name)
       else
@@ -187,19 +187,19 @@ module Git
 
     # returns +true+ if the branch exists locally
     def is_local_branch?(branch)
-      branch_names = self.branches.local.map {|b| b.name}
+      branch_names = self.branches.local.map { |b| b.name }
       branch_names.include?(branch)
     end
 
     # returns +true+ if the branch exists remotely
     def is_remote_branch?(branch)
-      branch_names = self.branches.local.map {|b| b.name}
+      branch_names = self.branches.local.map { |b| b.name }
       branch_names.include?(branch)
     end
 
     # returns +true+ if the branch exists
     def is_branch?(branch)
-      branch_names = self.branches.map {|b| b.name}
+      branch_names = self.branches.map { |b| b.name }
       branch_names.include?(branch)
     end
 
@@ -260,7 +260,7 @@ module Git
 
     # resets the working directory to the commitish with '--hard'
     def reset_hard(commitish = nil, opts = {})
-      opts = {:hard => true}.merge(opts)
+      opts = {hard: true}.merge(opts)
       self.lib.reset(commitish, opts)
     end
 
@@ -278,7 +278,7 @@ module Git
     # but automatically adds all modified files without having to explicitly
     # calling @git.add() on them.
     def commit_all(message, opts = {})
-      opts = {:add_all => true}.merge(opts)
+      opts = {add_all: true}.merge(opts)
       self.lib.commit(message, opts)
     end
 
@@ -289,7 +289,7 @@ module Git
 
     # checks out an old version of a file
     def checkout_file(version, file)
-      self.lib.checkout_file(version,file)
+      self.lib.checkout_file(version, file)
     end
 
     # fetches changes from a remote branch - this does not modify the working directory,
@@ -374,9 +374,7 @@ module Git
     end
 
     def apply(file)
-      if File.exists?(file)
-        self.lib.apply(file)
-      end
+      self.lib.apply(file) if File.exists?(file)
     end
 
     def apply_mail(file)
@@ -393,7 +391,7 @@ module Git
       return_value
     end
 
-    def with_temp_index &blk
+    def with_temp_index(&blk)
       tempfile = Tempfile.new('temp-index')
       temp_path = tempfile.path
       tempfile.unlink
@@ -426,7 +424,7 @@ module Git
     end
 
 
-    def ls_files(location=nil)
+    def ls_files(location = nil)
       self.lib.ls_files(location)
     end
 
@@ -441,8 +439,8 @@ module Git
       return_value
     end
 
-    def with_temp_working &blk
-      tempfile = Tempfile.new("temp-workdir")
+    def with_temp_working(&blk)
+      tempfile = Tempfile.new('temp-workdir')
       temp_dir = tempfile.path
       tempfile.unlink
       Dir.mkdir(temp_dir, 0700)

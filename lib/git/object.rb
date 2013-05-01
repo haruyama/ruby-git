@@ -49,7 +49,7 @@ module Git
       end
 
       def grep(string, path_limiter = nil, opts = {})
-        opts = {:object => sha, :path_limiter => path_limiter}.merge(opts)
+        opts = {object: sha, path_limiter: path_limiter}.merge(opts)
         @base.lib.grep(string, opts)
       end
 
@@ -66,13 +66,21 @@ module Git
         @base.lib.archive(@objectish, file, opts)
       end
 
-      def tree?; false; end
+      def tree?
+        false
+      end
 
-      def blob?; false; end
+      def blob?
+        false
+      end
 
-      def commit?; false; end
+      def commit?
+        false
+      end
 
-      def tag?; false; end
+      def tag?
+        false
+      end
 
     end
 
@@ -153,9 +161,7 @@ module Git
         @author = nil
         @committer = nil
         @message = nil
-        if init
-          set_commit(init)
-        end
+        set_commit(init) if init
       end
 
       def message
@@ -208,13 +214,11 @@ module Git
       end
 
       def set_commit(data)
-        if data['sha']
-          @sha = data['sha']
-        end
+        @sha = data['sha'] if data['sha']
         @committer = Git::Author.new(data['committer'])
         @author = Git::Author.new(data['author'])
         @tree = Git::Object::Tree.new(@base, data['tree'])
-        @parents = data['parent'].map{ |sha| Git::Object::Commit.new(@base, sha) }
+        @parents = data['parent'].map { |sha| Git::Object::Commit.new(@base, sha) }
         @message = data['message'].chomp
       end
 
@@ -253,9 +257,7 @@ module Git
     def self.new(base, objectish, type = nil, is_tag = false)
       if is_tag
         sha = base.lib.tag_sha(objectish)
-        if sha == ''
-          raise Git::GitTagNameDoesNotExist.new(objectish)
-        end
+        raise Git::GitTagNameDoesNotExist.new(objectish) if sha == ''
         return Git::Object::Tag.new(base, sha, objectish)
       end
 

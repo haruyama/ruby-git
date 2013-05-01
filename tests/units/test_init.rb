@@ -15,7 +15,7 @@ class TestInit < Test::Unit::TestCase
   end
 
   def test_open_opts
-    g = Git.open @wdir, :repository => @wbare, :index => @index
+    g = Git.open @wdir, repository: @wbare, index: @index
     assert_equal(g.repo.path, @wbare)
     assert_equal(g.index.path, @index)
   end
@@ -28,8 +28,8 @@ class TestInit < Test::Unit::TestCase
   #g = Git.init
   #  Git.init('project')
   #  Git.init('/home/schacon/proj',
-  #		{ :git_dir => '/opt/git/proj.git',
-  #		  :index_file => '/tmp/index'} )
+  #		{ git_dir: '/opt/git/proj.git',
+  #		  index_file: '/tmp/index'} )
   def test_git_init
     in_temp_dir do |path|
       Git.init
@@ -43,7 +43,7 @@ class TestInit < Test::Unit::TestCase
       assert(!File.exists?(File.join(dir, 'config')))
 
       in_temp_dir do |path|
-        Git.init(path, :repository => dir)
+        Git.init(path, repository: dir)
         assert(File.exists?(File.join(dir, 'config')))
       end
     end
@@ -59,7 +59,7 @@ class TestInit < Test::Unit::TestCase
 
   def test_git_clone_bare
     in_temp_dir do |path|
-      g = Git.clone(@wbare, 'bare.git', :bare => true)
+      g = Git.clone(@wbare, 'bare.git', bare: true)
       assert(File.exists?(File.join(g.repo.path, 'config')))
       assert_nil(g.dir)
     end

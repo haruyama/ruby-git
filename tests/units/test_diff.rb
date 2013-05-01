@@ -57,13 +57,13 @@ class TestDiff < Test::Unit::TestCase
     assert_equal(64, s[:total][:insertions])
 
     # per file
-    assert_equal(1, s[:files]["scott/newfile"][:deletions])
+    assert_equal(1, s[:files]['scott/newfile'][:deletions])
   end
 
   def test_diff_hashkey
-    assert_equal('5d46068', @diff["scott/newfile"].src)
-    assert_nil(@diff["scott/newfile"].blob(:dst))
-    assert(@diff["scott/newfile"].blob(:src).is_a?(Git::Object::Blob))
+    assert_equal('5d46068', @diff['scott/newfile'].src)
+    assert_nil(@diff['scott/newfile'].blob(:dst))
+    assert(@diff['scott/newfile'].blob(:src).is_a?(Git::Object::Blob))
   end
 
   def test_patch
